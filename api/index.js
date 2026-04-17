@@ -18,8 +18,9 @@ try {
 
 // HMAC Helper
 function signStage(stageName) {
+  const secret = process.env.SESSION_SECRET || config.sessionSecret;
   return crypto
-    .createHmac('sha256', config.sessionSecret)
+    .createHmac('sha256', secret)
     .update(stageName)
     .digest('hex');
 }
