@@ -3,9 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <title>.</title>
+  <style>
+    body {
+      margin: 0;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+    }
+    .header {
+      text-align: center;
+      padding: 20px 10px 10px;
+      font-size: 24px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #333;
+      flex-shrink: 0;
+    }
+    .grid-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      position: relative;
+      padding: 10px;
+      gap: 10px;
+      min-height: 0; /* Important for grid item scaling */
+    }
+    .grid-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .grid-item img {
+      max-width: 95%;
+      max-height: 95%;
+      object-fit: contain;
+    }
+    
+    /* Stylized Intersection */
+    .intersection {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .line-h {
+      position: absolute;
+      width: 150px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #000 50%, transparent);
+    }
+    .line-v {
+      position: absolute;
+      width: 2px;
+      height: 150px;
+      background: linear-gradient(to bottom, transparent, #000 50%, transparent);
+    }
+    .line-h::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 6px;
+        background: #000;
+        border-radius: 4px;
+    }
+    .line-v::after {
+        content: '';
+        position: absolute;
+        left: -2px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 40px;
+        background: #000;
+        border-radius: 4px;
+    }
+  </style>
 </head>
-<body style="margin:0; background:#fff; display:flex; 
-             justify-content:center; align-items:center; height:100vh;">
-  <img src="/assets/equation.webp" alt="" style="max-width:600px;">
+<body>
+  <div class="header">solve to find your way out</div>
+  <div class="grid-container">
+    <div class="grid-item"><img src="/assets/equation1.jpg" alt=""></div>
+    <div class="grid-item"><img src="/assets/equation2.jpg" alt=""></div>
+    <div class="grid-item"><img src="/assets/equation3.jpg" alt=""></div>
+    <div class="grid-item"><img src="/assets/equation4.jpg" alt=""></div>
+    <div class="intersection">
+      <div class="line-h"></div>
+      <div class="line-v"></div>
+    </div>
+  </div>
 </body>
 </html>
