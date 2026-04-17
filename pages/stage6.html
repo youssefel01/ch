@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GALLERY_SEC_6</title>
+  <style>
+    body {
+      background: #ffffff;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content:center;
+      align-items: center;
+      overflow: hidden;
+      font-family: monospace;
+    }
+
+    /* Museum Room Effect - White Gallery Style */
+    .room {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+    }
+
+    /* Cameras */
+    .camera {
+      position: absolute;
+      width: 150px;
+      z-index: 10;
+    }
+    .camera img{
+      width: 100px;
+    }
+
+    .camera-left {
+      top: 10px;
+      left: 10px;
+      transform: rotate(20deg);
+    }
+
+    .camera-right {
+      top: 10px;
+      right: 10px;
+      transform: scaleX(-1) rotate(20deg); /* Flip then tilt down */
+    }
+
+    /* The Subject (The Box) */
+    .subject-container {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      margin-top: 150px; /* Move the box down */
+    }
+
+    .subject {
+      max-width: 450px;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+
+    .subject:hover {
+      transform: scale(1.02);
+    }
+
+    /* Laser Grid Distraction (Red looks great on white) */
+    .lasers {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 6;
+      opacity: 0.2;
+    }
+
+    .laser {
+      position: absolute;
+      background: rgba(255, 0, 0, 0.8);
+      box-shadow: 0 0 2px red;
+    }
+
+    .h-laser { width: 100%; height: 1px; left: 0; }
+    .v-laser { height: 100%; width: 1px; top: 0; }
+  </style>
+</head>
+<body>
+  <div class="room">
+    <!-- Decoy Camera Left -->
+    <div class="camera camera-left">
+      <img src="/assets/camer2.jpg" alt="">
+    </div>
+
+    <!-- Decoy Camera Right -->
+    <div class="camera camera-right">
+      <img src="/assets/camer1.jpg" alt="">
+    </div>
+
+    <!-- The Real Subject -->
+    <div class="subject-container">
+      <img src="/assets/the-box.png" alt="Artifact" class="subject">
+    </div>
+
+    <!-- Laser Grids -->
+    <div class="lasers">
+      <div class="laser h-laser" style="top: 40%;"></div>
+      <div class="laser h-laser" style="top: 80%;"></div>
+      <div class="laser v-laser" style="left: 30%;"></div>
+      <div class="laser v-laser" style="left: 70%;"></div>
+    </div>
+  </div>
+</body>
+</html>

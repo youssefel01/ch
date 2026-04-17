@@ -1,0 +1,12 @@
+{
+  "answers": {
+    "stage3": "29"
+  },
+  "routes": {
+    "start": "start",
+    "stage4": "7b2e84",
+    "stage5": "d1c559",
+    "stage6": "f4a812"
+  },
+  "sessionSecret": "change-this-to-something-very-long-and-random-123456"
+}
