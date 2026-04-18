@@ -13,7 +13,7 @@ This document is a full instruction plan for building the web application that h
 | Stage | URL | What happens |
 |---|---|---|
 | Stage 3 | `/start` | Shows the equation image |
-| Stage 3 Answer | `/:answer` (e.g., `/246`) | Validates answer and redirects to Stage 4 hash |
+| Stage 3 Answer | `/:answer` (e.g., `/247`) | Validates answer and redirects to Stage 4 hash |
 | Stage 4 | `/robots.txt` | Custom robots file pointing to Stage 5 hash |
 | Stage 5 | `/s/:hash` | Blank page with hidden HTML comment |
 | Stage 6 | `/s/:hash` | Page with one downloadable image |
@@ -34,7 +34,7 @@ Access to Stage N requires a valid HMAC-signed cookie from Stage N-1.
 *   **Stealth Fail:** If a cookie is missing or invalid, the server returns a **blank 404 page** (no text, no error), making it impossible to tell if the URL exists.
 
 ### Rule 3 — Answer Mapping (The "Gateway")
-When a player types the answer to a puzzle (like `/246`), the server:
+When a player types the answer to a puzzle (like `/247`), the server:
 1.  Validates the answer against `config.json`.
 2.  Sets the `stage3` cookie.
 3.  **Redirects** them to the hashed URL of the next stage.
@@ -87,7 +87,7 @@ The backend lives in `api/index.js` and uses:
 │   │   ├── equation.webp
 │   │   └── wall_meta.jpg
 │   └── audio/
-│       └── spectrum-analyzer.wav
+│       └── academo-org-demos-spectrum-analyzer.wav
 ├── config.json
 ├── vercel.json           ← Routing config for Vercel
 └── package.json
@@ -99,7 +99,7 @@ The backend lives in `api/index.js` and uses:
 
 ### `pages/start.html` — Stage 3
 *   **Content:** White background, centered `equation.webp`.
-*   **Logic:** No forms. Players must manually type the answer in the URL (e.g., `yoursite.com/246`).
+*   **Logic:** No forms. Players must manually type the answer in the URL (e.g., `yoursite.com/247`).
 
 ### `/robots.txt`
 *   **Content:**
@@ -117,7 +117,7 @@ The backend lives in `api/index.js` and uses:
 
 ### `pages/stage6.html` — Stage 6 (EXIF)
 *   **Content:** A museum gallery with two security cameras and a central "box" artifact.
-*   **Metadata:** The `the-box.png` image contains the comment: `Good job. Now listen carefully at: /audio/spectrum-analyzer.wav`.
+*   **Metadata:** The `the-box.png` image contains the comment: `Good job. Now listen carefully at: /audio/academo-org-demos-spectrum-analyzer.wav`.
 *   **Requirement:** Requires `stage5` cookie.
 
 ---
@@ -140,9 +140,9 @@ The backend lives in `api/index.js` and uses:
 ## Summary of Player Experience
 
 1.  Starts at `/start`.
-2.  Solves math, types `/246`.
+2.  Solves math, types `/247`.
 3.  Server redirects to `/s/7b2e84`. Page says "find the robots".
 4.  Goes to `/robots.txt`. Finds `/s/d1c559`.
 5.  Goes to `/s/d1c559`. Views source, finds `/s/f4a812`.
-6.  Goes to `/s/f4a812`. Downloads image, finds `/audio/spectrum-analyzer.wav`.
+6.  Goes to `/s/f4a812`. Downloads image, finds `/audio/academo-org-demos-spectrum-analyzer.wav`.
 7.  Downloads audio, analyzes spectrogram.

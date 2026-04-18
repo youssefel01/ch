@@ -79,13 +79,15 @@ app.get('/robots.txt', (req, res) => {
     '/deprecated', '/legacy', '/next_gen', '/experimental'
   ];
 
+  // Insert the real path at a random position among the decoys
+  const realPath = `/s/${config.routes.stage5}`;
+  const randomIndex = Math.floor(Math.random() * (decoys.length + 1));
+  decoys.splice(randomIndex, 0, realPath);
+
   let robotsContent = 'User-agent: *\n';
   decoys.forEach(path => {
     robotsContent += `Disallow: ${path}\n`;
   });
-  
-  // The real clue is hidden among the decoys
-  robotsContent += `Disallow: /s/${config.routes.stage5}\n`;
   
   robotsContent += '\nyou should read everything if you want to win';
   res.send(robotsContent);
