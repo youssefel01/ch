@@ -4,7 +4,7 @@
 
 This document is a full instruction plan for building the web application that hosts the scavenger ENIGMA VERSE challenge from Stage 3 to Stage 7.
 
-**The app is built using Express.js running as a Serverless Function on Vercel. Frontend pages are served as static HTML/CSS. This approach allows for free deployment while keeping advanced security like progressive cookies and hashed routes.**
+**The app is built using Express.js running as a Serverless Function on Vercel. Frontend pages are served as static HTML/CSS. This approach allows for free deployment while keeping hashed routes and stealth 404s.**
 
 ---
 
@@ -17,7 +17,7 @@ This document is a full instruction plan for building the web application that h
 | Stage 4 | `/robots.txt` | Custom robots file pointing to Stage 5 hash |
 | Stage 5 | `/s/:hash` | Blank page with hidden HTML comment |
 | Stage 6 | `/s/:hash` | Page with one downloadable image |
-| Stage 7 | `/audio/:filename` | Serves the audio file if Stage 6 is complete |
+| Stage 7 | `/audio/:filename` | Serves the audio file |
 
 ---
 
@@ -28,43 +28,33 @@ This is the most important requirement of the entire app.
 ### Rule 1 — Dynamic Hashed Routes
 All sensitive routes (Stages 4-6) are accessed via a generic `/s/:hash` endpoint. The actual hashes are stored in `config.json` and are never exposed.
 
-### Rule 2 — Progressive Session Cookies
-Access to Stage N requires a valid HMAC-signed cookie from Stage N-1.
-*   **Signature:** `HMAC-SHA256(stage_name + session_secret)`
-*   **Stealth Fail:** If a cookie is missing or invalid, the server returns a **blank 404 page** (no text, no error), making it impossible to tell if the URL exists.
-
-### Rule 3 — Answer Mapping (The "Gateway")
+### Rule 2 — Answer Mapping (The "Gateway")
 When a player types the answer to a puzzle (like `/247`), the server:
 1.  Validates the answer against `config.json`.
-2.  Sets the `stage3` cookie.
-3.  **Redirects** them to the hashed URL of the next stage.
+2.  **Redirects** them to the hashed URL of the next stage.
 
-### Rule 4 — Stealth 404s
-Every unauthorized request, rate-limit hit, or invalid route returns a completely empty white page with a 404 status.
+### Rule 3 — Stealth 404s
+Every unauthorized request or invalid route returns a completely empty white page with a 404 status (actually a random meme page).
 
 ---
 
 ## Backend (Express + Node.js)
 
-The backend lives in `api/index.js` and uses:
-*   `express`: For routing and middleware.
-*   `cookie-parser`: To handle session cookies easily.
-*   `crypto`: For HMAC signing.
+The backend lives in `api/index.js` and uses `express` for routing.
 
 ### config.json structure
 
 ```json
 {
   "answers": {
-    "stage3": "30"
+    "stage3": "247"
   },
   "routes": {
     "start": "start-page-logic",
     "stage4": "7b2e84",
     "stage5": "d1c559",
     "stage6": "f4a812"
-  },
-  "sessionSecret": "replace-this-with-a-long-random-string"
+  }
 }
 ```
 
@@ -85,9 +75,13 @@ The backend lives in `api/index.js` and uses:
 ├── public/
 │   ├── assets/
 │   │   ├── equation.webp
-│   │   └── wall_meta.jpg
-│   └── audio/
-│       └── academo-org-demos-spectrum-analyzer.wav
+│   │   ├── camer1.jpg
+│   │   ├── camer2.jpg
+│   │   └── the-box.png
+│   ├── audio/
+│   │   └── academo-org-demos-spectrum-analyzer.wav
+│   └── meme/
+│       └── [1-7].jpg
 ├── config.json
 ├── vercel.json           ← Routing config for Vercel
 └── package.json
@@ -98,42 +92,19 @@ The backend lives in `api/index.js` and uses:
 ## Page specifications
 
 ### `pages/start.html` — Stage 3
-*   **Content:** White background, centered `equation.webp`.
+*   **Content:** White background, centered equations.
 *   **Logic:** No forms. Players must manually type the answer in the URL (e.g., `yoursite.com/247`).
 
 ### `/robots.txt`
-*   **Content:**
-    ```
-    User-agent: *
-    Disallow: /s/d1c559
-    
-    you should read everything if you want to win
-    ```
-*   **Logic:** Publicly accessible. Sets the `stage4` cookie when visited.
+*   **Content:** Lists decoys + real Stage 5 hash.
+*   **Logic:** Publicly accessible.
 
 ### `pages/stage5.html` — Stage 5 (Source Code)
-*   **Content:** Blank. HTML comment: `<!-- good job. now inspect the image at: /s/f4a812 -->`.
-*   **Requirement:** Requires `stage4` cookie.
+*   **Content:** Security alert UI. HTML comment: `<!-- good job. now inspect the image at: /s/f4a812 -->` hidden under 10,000 lines of noise.
 
 ### `pages/stage6.html` — Stage 6 (EXIF)
-*   **Content:** A museum gallery with two security cameras and a central "box" artifact.
+*   **Content:** Museum heist UI with security cameras.
 *   **Metadata:** The `the-box.png` image contains the comment: `Good job. Now listen carefully at: /audio/academo-org-demos-spectrum-analyzer.wav`.
-*   **Requirement:** Requires `stage5` cookie.
-
----
-
-## Deployment (Vercel)
-
-1.  **Vercel configuration (`vercel.json`):**
-    ```json
-    {
-      "rewrites": [
-        { "source": "/(.*)", "destination": "/api/index.js" }
-      ]
-    }
-    ```
-2.  **Free Tier:** This setup runs entirely within Vercel's free hobby tier.
-3.  **Environment Variables:** `sessionSecret` should be set in the Vercel Dashboard for extra security, though `config.json` works for local testing.
 
 ---
 
